@@ -85,7 +85,7 @@
                                             <a class="remove-item text-danger float-right" id="remove_{{ item.item_id }}" data-product_size="{{ item.size }}"><small>Remove</small></a>
                                         </td>
                                         <td class="py-3">
-                                            <p class="my-0">${{ item.product.price }}</p>
+                                            <p class="my-0">${{ item.product.price | calc_subtotal:item.quantity }}</p>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -137,16 +137,16 @@
 {{ block.super }}
 {% include 'products/includes/quantity_input_script.html' %}
 
-<script>
+<script type="text/javascript">
     // update quantity on click
     $('.update-link').click(function(e) {
-        var form = $(this).prev('update-form');
+        var form = $(this).prev('.update-form');
         form.submit();
     })
 
     // remove item and reload on click
     $('.remove-item').click(function(e) {
-        var csrf_token = "{{ csrf_token }}";
+        var csrfToken = "{{ csrf_token }}";
         var itemId = $(this).attr('id').split('remove_')[1];
         var size = $(this).data('product_size');
         var url = `/bag/remove/${itemId}/`;
@@ -155,7 +155,7 @@
         $.post(url, data)
          .done(function() {
              location.reload();
-        })
+        });
     })
 </script>
 {% endblock %}
